@@ -7,15 +7,32 @@ from tkinter import ttk
 rec = sr.Recognizer()
 is_recording = False  # Variable to control recording
 
+languages = ["pt-BR", "en"]
+
+def select_language():
+
+    print("Select one of those languages below: ")
+
+    for index,language in enumerate(languages):
+        print(f"{index+1} = {language}")
+    language_select = int(input("Number: "))
+
+    for language_number in range(language_select):
+        language_select = languages[language_number]
+
+    return language_select
+
+selected_language = select_language()
+
 # Toggle recording function
 def toggle_recording():
     global is_recording
     is_recording = not is_recording # Making the sentence true
     if is_recording:
-        update_button.config(text="Pausar gravação")
+        update_button.config(text="Pause")
         start_recording_thread()
     else:
-        update_button.config(text="Continuar gravação")
+        update_button.config(text="Continue")
 
 # Start recording thread
 def start_recording_thread():
@@ -31,9 +48,9 @@ def start_recording():
 
         with sr.Microphone(mic_text) as mic:
             rec.adjust_for_ambient_noise(mic)
-            print("Você pode falar agora, eu vou gravar:")
+            print("You can say now:")
             audio = rec.listen(mic)
-            texto = rec.recognize_google(audio, language="pt-BR")
+            texto = rec.recognize_google(audio, language=selected_language)
             print(texto)
 
             # Insert the recognized text into the Text widget
